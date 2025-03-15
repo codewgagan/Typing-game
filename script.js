@@ -25,14 +25,53 @@ let typedValueElement = document.getElementById('typed-value');
 
 document.getElementById("start").addEventListener("click", function(){
     // get a random quote
+	let quoteIndex = Math.round(Math.floor()*quotes.length);
+	let quote = quotes[quoteIndex];
     // put the quote into array of words
+	words = quote.split(' ');
     // reset the word index for tracking
-})
+	wordIndex = 0;
+
 
 
 
 // 5. UI updates
 // create an array of span elements so we can get a class
-// convert into string nad set as innerHTML on quote display(we use join methos)
+const spanWords = words.map(function(word) {return `<span>${word}</span>`});
+// convert into string and set as innerHTML on quote display(we use join methos)
+quoteElement.innerHTML = spanWords.join('');
+
 // Hightlight the first word
+quoteElement.childNodes[0].className = 'highlight';
 // clear prior messages
+messageElement.innerText = '';
+
+// Setup the textbox
+// Clear the textbox
+typedValueElement.value = '';
+// set focus 
+typedValueElement.focus();
+
+})
+
+// add one event listner when we type something
+typedValueElement.addEventListener('input',(e)=>{
+	
+	// get the current word
+	let currentWord = words[wordIndex];
+	// get the current value
+	let typedValue = typedValueElement.value;
+	// match typed value with current word &&  wordIndex
+	if(typedValue === currentWord && wordIndex === words.length - 1){
+		const elapsedTime = Date.now() - startTime;
+		const message =  `Congratulation you completed this game in ${elapsedTime/1000} seconds.`
+		messageElement.innerText = message;
+
+	}else if(){
+
+	}else if(){
+
+	}else{
+		
+	}
+})
