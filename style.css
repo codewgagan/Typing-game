@@ -1,8 +1,36 @@
-.hightligh{
-    background: yellow;
+
+body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+h1, h2, div, input, button {
+    text-align: center;
+    margin: 10px;
+}
+
+#typed-value {
+    width: 80%;
+    padding: 10px;
+    font-size: 1.2em;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+.highlight{
+    background: yellow; 
 
 
 }
 .error{
     background: red;
 }
+
