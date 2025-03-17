@@ -1,77 +1,83 @@
 // 1. Quotes
 const quotes = [
-	'When you have eliminated the impossible, whatever remains, however improbable, must be the truth.',
-	'There is nothing more deceptive than an obvious fact.',
-	'I ought to know by this time that when a fact appears to be opposed to a long train of deductions it invariably proves to be capable of bearing some other interpretation.',
-	'I never make exceptions. An exception disproves the rule.',
-	'What one man can invent another can discover.',
-	'Nothing clears up a case so much as stating it to another person.',
-	'Education never ends, Watson. It is a series of lessons, with the greatest for the last.',
+    'When you have eliminated the impossible, whatever remains, however improbable, must be the truth.',
+    'There is nothing more deceptive than an obvious fact.',
+    'I ought to know by this time that when a fact appears to be opposed to a long train of deductions it invariably proves to be capable of bearing some other interpretation.',
+    'I never make exceptions. An exception disproves the rule.',
+    'What one man can invent another can discover.',
+    'Nothing clears up a case so much as stating it to another person.',
+    'Education never ends, Watson. It is a series of lessons, with the greatest for the last.',
 ];
 
-// 2. array for storing the words
+// 2. Variables for tracking
 let words = [];
-// stores the index of the word the player is typing
 let wordIndex = 0;
-// default value for starttime
-let startTime = Date.now();
+let startTime;
 
-// 3. Grab UI elements
-let quoteElement = document.getElementById('quote');
-let messageElement = document.getElementById('message');
-let typedValueElement = document.getElementById('typed-value');
+// 3. Get UI elements
+const quoteElement = document.getElementById('quote');
+const messageElement = document.getElementById('message');
+const typedValueElement = document.getElementById('typed-value');
 
-// 4. Add evenet listener to the start button
+// 4. Event listener for the start button
+document.getElementById("start").addEventListener("click", function() {
+    // Get a random quote
+    let quoteIndex = Math.floor(Math.random() * quotes.length);
+    let quote = quotes[quoteIndex];
 
-document.getElementById("start").addEventListener("click", function(){
-    // get a random quote
-	let quoteIndex = Math.round(Math.floor()*quotes.length);
-	let quote = quotes[quoteIndex];
-    // put the quote into array of words
-	words = quote.split(' ');
-    // reset the word index for tracking
-	wordIndex = 0;
+    // Split quote into words
+    words = quote.split(' ');
 
+    // Reset word index
+    wordIndex = 0;
 
+    // Start the timer
+    startTime = Date.now();
 
+    // Update UI
+    quoteElement.innerHTML = words.map(word => `<span>${word}</span>`).join(' ');
 
-// 5. UI updates
-// create an array of span elements so we can get a class
-const spanWords = words.map(function(word) {return `<span>${word}</span>`});
-// convert into string and set as innerHTML on quote display(we use join methos)
-quoteElement.innerHTML = spanWords.join('');
+    // Highlight the first word correctly
+    quoteElement.querySelector('span').classList.add('highlight');
 
-// Hightlight the first word
-quoteElement.childNodes[0].className = 'highlight';
-// clear prior messages
-messageElement.innerText = '';
+    // Clear message
+    messageElement.innerText = '';
 
-// Setup the textbox
-// Clear the textbox
-typedValueElement.value = '';
-// set focus 
-typedValueElement.focus();
+    // Reset input
+    typedValueElement.value = '';
+    typedValueElement.focus();
+});
 
-})
+// 5. Event listener for typing
+typedValueElement.addEventListener('input', function() {
+    // Get current word and input value
+    let currentWord = words[wordIndex];
+    let typedValue = typedValueElement.value;
 
-// add one event listner when we type something
-typedValueElement.addEventListener('input',(e)=>{
-	
-	// get the current word
-	let currentWord = words[wordIndex];
-	// get the current value
-	let typedValue = typedValueElement.value;
-	// match typed value with current word &&  wordIndex
-	if(typedValue === currentWord && wordIndex === words.length - 1){
-		const elapsedTime = Date.now() - startTime;
-		const message =  `Congratulation you completed this game in ${elapsedTime/1000} seconds.`
-		messageElement.innerText = message;
+    // If completed correctly
+    if (typedValue === currentWord && wordIndex === words.length - 1) {
+        const elapsedTime = (Date.now() - startTime) / 1000;
+        messageElement.innerText = `Congratulations! You completed the game in ${elapsedTime} seconds.`;
+    } 
+    // If word is completed (space pressed)
+    else if (typedValue.endsWith(' ') && typedValue.trim() === currentWord) {
+        typedValueElement.value = ''; // Clear input field
+        wordIndex++; // Move to next word
 
-	}else if(){
+        // Remove highlight from all words
+        quoteElement.querySelectorAll('span').forEach(span => span.classList.remove('highlight'));
 
-	}else if(){
-
-	}else{
-		
-	}
-})
+        // Highlight the new word
+        if (wordIndex < words.length) {
+            quoteElement.querySelectorAll('span')[wordIndex].classList.add('highlight');
+        }
+    } 
+    // If input is correct so far
+    else if (currentWord.startsWith(typedValue)) {
+        typedValueElement.classList.remove('error');
+    } 
+    // If input is incorrect
+    else {
+        typedValueElement.classList.add('error');
+    }
+});
